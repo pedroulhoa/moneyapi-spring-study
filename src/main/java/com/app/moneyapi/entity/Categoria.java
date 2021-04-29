@@ -1,4 +1,4 @@
-package com.app.moneyapi.entities;
+package com.app.moneyapi.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
