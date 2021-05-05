@@ -1,15 +1,16 @@
 package com.app.moneyapi.resource;
 
 import com.app.moneyapi.entity.Categoria;
+import com.app.moneyapi.event.ResourceCreateEvent;
 import com.app.moneyapi.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,9 @@ public class CategoriaResource {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private ApplicationEventPublisher publisher;
+
     @GetMapping
     public List<Categoria> getAll() {
         return categoriaRepository.findAll();
@@ -27,12 +31,8 @@ public class CategoriaResource {
     @PostMapping
     public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         Categoria categoriaSave = categoriaRepository.save(categoria);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
-                .buildAndExpand(categoriaSave.getCodigo()).toUri();
-        response.setHeader("Location", uri.toASCIIString());
-
-        return ResponseEntity.created(uri).body(categoriaSave);
+        publisher.publishEvent(new ResourceCreateEvent(this, response, categoriaSave.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSave);
     }
 
     @GetMapping("/{codigo}")
