@@ -42,5 +42,10 @@ public class PessoaResource {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        pessoaRepository.deleteById(id);
+    }
 
 }
