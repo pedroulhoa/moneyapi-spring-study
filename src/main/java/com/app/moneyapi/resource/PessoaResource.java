@@ -3,6 +3,7 @@ package com.app.moneyapi.resource;
 import com.app.moneyapi.entity.Pessoa;
 import com.app.moneyapi.event.ResourceCreateEvent;
 import com.app.moneyapi.repository.PessoaRepository;
+import com.app.moneyapi.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ public class PessoaResource {
 
     @Autowired
     private PessoaRepository pessoaRepository;
+
+    @Autowired
+    private PessoaService pessoaService;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -46,6 +50,12 @@ public class PessoaResource {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         pessoaRepository.deleteById(id);
+    }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> update(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
+        Pessoa pessoaSave = pessoaService.update(codigo, pessoa);
+        return ResponseEntity.ok(pessoaSave);
     }
 
 }
