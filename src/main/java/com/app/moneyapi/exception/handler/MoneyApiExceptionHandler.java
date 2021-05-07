@@ -30,7 +30,7 @@ public class MoneyApiExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String msgUsuario = messageSource.getMessage("body.invalido", null, LocaleContextHolder.getLocale());
-        String msgErro = ex.getCause().getMessage();
+        String msgErro = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 
         List<Erros> erros = Arrays.asList(new Erros(msgUsuario, msgErro));
 

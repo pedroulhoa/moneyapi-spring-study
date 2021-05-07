@@ -52,10 +52,16 @@ public class PessoaResource {
         pessoaRepository.deleteById(id);
     }
 
-    @PutMapping("/{codigo}")
-    public ResponseEntity<Pessoa> update(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
-        Pessoa pessoaSave = pessoaService.update(codigo, pessoa);
+    @PutMapping("/{id}")
+    public ResponseEntity<Pessoa> update(@PathVariable Long id, @Valid @RequestBody Pessoa pessoa) {
+        Pessoa pessoaSave = pessoaService.update(id, pessoa);
         return ResponseEntity.ok(pessoaSave);
+    }
+
+    @PutMapping("/{id}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePropertieAtivo(@PathVariable Long id, @RequestBody Boolean ativo) {
+        pessoaService.updatePropertieAtivo(id, ativo);
     }
 
 }

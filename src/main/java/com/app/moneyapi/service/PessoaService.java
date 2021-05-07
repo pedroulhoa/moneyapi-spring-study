@@ -13,12 +13,24 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public Pessoa update(Long codigo, Pessoa pessoa) {
-        Pessoa pessoaSave = pessoaRepository.findById(codigo)
-                .orElseThrow(() -> {
-                    throw new EmptyResultDataAccessException(1);
-                });
+    public Pessoa update(Long id, Pessoa pessoa) {
+        Pessoa pessoaSave = getPessoaById(id);
         BeanUtils.copyProperties(pessoa, pessoaSave, "id");
         return pessoaRepository.save(pessoaSave);
     }
+
+    public void updatePropertieAtivo(Long id, Boolean ativo) {
+        Pessoa pessoaSave = getPessoaById(id);
+        pessoaSave.setAtivo(ativo);
+        pessoaRepository.save(pessoaSave);
+    }
+
+    private Pessoa getPessoaById(Long id) {
+        return pessoaRepository.findById(id)
+                .orElseThrow(() -> {
+                    throw new EmptyResultDataAccessException(1);
+                });
+    }
+
+
 }
