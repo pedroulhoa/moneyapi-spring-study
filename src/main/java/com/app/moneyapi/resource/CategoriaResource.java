@@ -31,13 +31,13 @@ public class CategoriaResource {
     @PostMapping
     public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         Categoria categoriaSave = categoriaRepository.save(categoria);
-        publisher.publishEvent(new ResourceCreateEvent(this, response, categoriaSave.getCodigo()));
+        publisher.publishEvent(new ResourceCreateEvent(this, response, categoriaSave.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSave);
     }
 
-    @GetMapping("/{codigo}")
-    public ResponseEntity getCategoria(@PathVariable Long codigo) {
-        return categoriaRepository.findById(codigo)
+    @GetMapping("/{id}")
+    public ResponseEntity getCategoria(@PathVariable Long id) {
+        return categoriaRepository.findById(id)
                 .map(c -> ResponseEntity.ok().body(c))
                 .orElse(ResponseEntity.notFound().build());
     }

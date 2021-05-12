@@ -13,7 +13,6 @@ public class ResourceCreateListener implements ApplicationListener<ResourceCreat
 
     @Override
     public void onApplicationEvent(ResourceCreateEvent resourceCreateEvent) {
-        System.out.println("caiu evento");
         HttpServletResponse response = resourceCreateEvent.getResponse();
         Long idResource = resourceCreateEvent.getIdResource();
 
@@ -21,7 +20,6 @@ public class ResourceCreateListener implements ApplicationListener<ResourceCreat
     }
 
     private void addHeaderLocation(HttpServletResponse response, Long idResource) {
-        System.out.println("caiu addheader");
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{idResource}")
                 .buildAndExpand(idResource).toUri();
         response.setHeader("Location", uri.toASCIIString());

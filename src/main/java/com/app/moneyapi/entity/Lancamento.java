@@ -1,6 +1,7 @@
 package com.app.moneyapi.entity;
 
 import com.app.moneyapi.entity.enums.TipoLancamento;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
