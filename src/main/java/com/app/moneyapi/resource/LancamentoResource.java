@@ -3,6 +3,7 @@ package com.app.moneyapi.resource;
 import com.app.moneyapi.entity.Lancamento;
 import com.app.moneyapi.event.ResourceCreateEvent;
 import com.app.moneyapi.repository.LancamentoRepository;
+import com.app.moneyapi.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,9 @@ public class LancamentoResource {
     private LancamentoRepository lancamentoRepository;
 
     @Autowired
+    private LancamentoService lancamentoService;
+
+    @Autowired
     private ApplicationEventPublisher publisher;
 
     @GetMapping
@@ -37,7 +41,7 @@ public class LancamentoResource {
 
     @PostMapping
     public ResponseEntity<Lancamento> create(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
-        Lancamento lancamentoSave = lancamentoRepository.save(lancamento);
+        Lancamento lancamentoSave = lancamentoService.save(lancamento);
         publisher.publishEvent(new ResourceCreateEvent(this, response, lancamentoSave.getId()));
         return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSave);
     }

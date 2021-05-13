@@ -2,6 +2,7 @@ package com.app.moneyapi.exception.handler;
 
 import com.app.moneyapi.dto.error.Erros;
 import com.app.moneyapi.dto.error.RequestError;
+import com.app.moneyapi.exception.PessoaInexistenteOuInativaException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -64,6 +65,15 @@ public class MoneyApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
         String msgUsuario = messageSource.getMessage("recurso.operacao-nao-permitida", null, LocaleContextHolder.getLocale());
         String msgErro = ExceptionUtils.getRootCauseMessage(ex);
+        List<Erros> erros = Arrays.asList(new Erros(msgUsuario, msgErro));
+
+        return handleExceptionInternal(ex, new RequestError(erros), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler({PessoaInexistenteOuInativaException.class})
+    public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex, WebRequest request) {
+        String msgUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+        String msgErro = ex.toString();
         List<Erros> erros = Arrays.asList(new Erros(msgUsuario, msgErro));
 
         return handleExceptionInternal(ex, new RequestError(erros), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
