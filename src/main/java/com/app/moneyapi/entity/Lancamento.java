@@ -4,6 +4,7 @@ import com.app.moneyapi.entity.enums.TipoLancamento;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -16,25 +17,31 @@ public class Lancamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String descricao;
 
+    @NotNull
     @Column(name = "data_vencimento")
     private LocalDate dataVencimento;
 
     @Column(name = "data_pagamento")
     private LocalDate dataPagamento;
 
+    @NotNull
     private BigDecimal valor;
 
     private String observacao;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private TipoLancamento tipo;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "codigo_categoria")
     private Categoria categoria;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "codigo_pessoa")
     private Pessoa pessoa;
