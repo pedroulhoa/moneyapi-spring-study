@@ -1,6 +1,7 @@
 package com.app.moneyapi.resource;
 
 import com.app.moneyapi.entity.Lancamento;
+import com.app.moneyapi.repository.filter.LancamentoFilter;
 import com.app.moneyapi.event.ResourceCreateEvent;
 import com.app.moneyapi.repository.LancamentoRepository;
 import com.app.moneyapi.service.LancamentoService;
@@ -30,6 +31,11 @@ public class LancamentoResource {
     @GetMapping
     public List<Lancamento> getAll() {
         return lancamentoRepository.findAll();
+    }
+
+    @GetMapping("/pesquisa")
+    public List<Lancamento> search(LancamentoFilter lancamentoFilter) {
+        return lancamentoRepository.searchByFilter(lancamentoFilter);
     }
 
     @GetMapping("/{id}")
