@@ -7,6 +7,8 @@ import com.app.moneyapi.repository.LancamentoRepository;
 import com.app.moneyapi.service.LancamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +36,8 @@ public class LancamentoResource {
     }
 
     @GetMapping("/pesquisa")
-    public List<Lancamento> search(LancamentoFilter lancamentoFilter) {
-        return lancamentoRepository.searchByFilter(lancamentoFilter);
+    public Page<Lancamento> search(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return lancamentoRepository.searchByFilter(lancamentoFilter, pageable);
     }
 
     @GetMapping("/{id}")
