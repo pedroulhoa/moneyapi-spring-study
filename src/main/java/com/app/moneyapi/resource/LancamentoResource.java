@@ -1,5 +1,6 @@
 package com.app.moneyapi.resource;
 
+import com.app.moneyapi.dto.LancamentoDTO;
 import com.app.moneyapi.entity.Lancamento;
 import com.app.moneyapi.repository.filter.LancamentoFilter;
 import com.app.moneyapi.event.ResourceCreateEvent;
@@ -35,6 +36,12 @@ public class LancamentoResource {
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public List<Lancamento> getAll() {
         return lancamentoRepository.findAll();
+    }
+
+    @GetMapping(params = "resumo")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    public Page<LancamentoDTO> getResumeLancamento(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return lancamentoRepository.getResumeLancamento(lancamentoFilter, pageable);
     }
 
     @GetMapping("/pesquisa")

@@ -1,5 +1,6 @@
 package com.app.moneyapi.repository.impl;
 
+import com.app.moneyapi.dto.LancamentoDTO;
 import com.app.moneyapi.entity.Lancamento;
 import com.app.moneyapi.repository.filter.LancamentoFilter;
 import com.app.moneyapi.repository.query.LancamentoRepositoryQuery;
@@ -38,6 +39,31 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
         return new PageImpl<>(query.getResultList(), pageable, total(lancamentoFilter));
     }
 
+    @Override
+    public Page<LancamentoDTO> getResumeLancamento(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<LancamentoDTO> criteria = builder.createQuery(LancamentoDTO.class);
+        Root<Lancamento> root = criteria.from(Lancamento.class);
+
+        criteria.select(builder.construct(LancamentoDTO.class,
+                root.get("id"),
+                root.get("descricao"),
+                root.get("dataVencimento"),
+                root.get("dataPagamento"),
+                root.get("valor"),
+                root.get("tipo"),
+                root.get("categoria").get("nome"),
+                root.get("pessoa").get("nome")));
+
+        Predicate[] predicates = criarFiltrosLancamento(lancamentoFilter, builder, root);
+        criteria.where(predicates);
+
+        TypedQuery<LancamentoDTO> query = manager.createQuery(criteria);
+        addPaginacao(query, pageable);
+
+        return new PageImpl<>(query.getResultList(), pageable, total(lancamentoFilter));
+    }
+
     private Predicate[] criarFiltrosLancamento(LancamentoFilter lancamentoFilter, CriteriaBuilder builder, Root<Lancamento> root) {
 
         List<Predicate> predicates = new ArrayList<>();
@@ -64,7 +90,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
         return predicates.toArray(new Predicate[predicates.size()]);
     }
 
-    private void addPaginacao(TypedQuery<Lancamento> query, Pageable pageable) {
+    private void addPaginacao(TypedQuery<?> query, Pageable pageable) {
         int paginaAtual = pageable.getPageNumber();
         int totalRegistrosPorPagina = pageable.getPageSize();
         int primeiroRegistroDaPagina = paginaAtual * totalRegistrosPorPagina;
