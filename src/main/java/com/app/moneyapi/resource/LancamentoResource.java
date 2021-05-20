@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,16 +32,19 @@ public class LancamentoResource {
     private ApplicationEventPublisher publisher;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public List<Lancamento> getAll() {
         return lancamentoRepository.findAll();
     }
 
     @GetMapping("/pesquisa")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public Page<Lancamento> search(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return lancamentoRepository.searchByFilter(lancamentoFilter, pageable);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public ResponseEntity<Lancamento> get(@PathVariable Long id) {
         return lancamentoRepository.findById(id)
                 .map(l -> ResponseEntity.ok().body(l))
@@ -48,6 +52,7 @@ public class LancamentoResource {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
     public ResponseEntity<Lancamento> create(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSave = lancamentoService.save(lancamento);
         publisher.publishEvent(new ResourceCreateEvent(this, response, lancamentoSave.getId()));
@@ -56,6 +61,7 @@ public class LancamentoResource {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
     public void delete(@PathVariable Long id) {
         lancamentoRepository.deleteById(id);
     }
