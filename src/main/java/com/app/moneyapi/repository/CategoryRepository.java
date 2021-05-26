@@ -1,0 +1,8 @@
+package com.app.moneyapi.repository;
+
+import com.app.moneyapi.entity.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+
+}

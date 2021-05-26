@@ -2,19 +2,19 @@ package com.app.moneyapi.dto.error;
 
 public class Erros {
 
-    private String msgUsuario;
-    private String msgErro;
+    private String userMsg;
+    private String errorMsg;
 
-    public Erros(String msgUsuario, String msgErro) {
-        this.msgUsuario = msgUsuario;
-        this.msgErro = msgErro;
+    public Erros(String userMsg, String errorMsg) {
+        this.userMsg = userMsg;
+        this.errorMsg = errorMsg;
     }
 
-    public String getMsgUsuario() {
-        return msgUsuario;
+    public String getUserMsg() {
+        return userMsg;
     }
 
-    public String getMsgErro() {
-        return msgErro;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 }

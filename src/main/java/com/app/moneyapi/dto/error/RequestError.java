@@ -6,18 +6,18 @@ import java.util.List;
 public class RequestError {
 
     private LocalDateTime time;
-    private List<Erros> erros;
+    private List<Erros> errors;
 
-    public RequestError(List<Erros> erros) {
+    public RequestError(List<Erros> errors) {
         this.time = LocalDateTime.now();
-        this.erros = erros;
+        this.errors = errors;
     }
 
     public LocalDateTime getTime() {
         return time;
     }
 
-    public List<Erros> getErros() {
-        return erros;
+    public List<Erros> getErrors() {
+        return errors;
     }
 }

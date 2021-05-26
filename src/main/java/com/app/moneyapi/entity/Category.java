@@ -6,8 +6,8 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-@Table(name = "categoria")
-public class Categoria {
+@Table(name = "category")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,9 +15,9 @@ public class Categoria {
 
     @NotNull
     @Size(min = 3, max = 20)
-    private String nome;
+    private String name;
 
-    public Categoria() {
+    public Category() {
     }
 
     public Long getId() {
@@ -28,20 +28,20 @@ public class Categoria {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Categoria categoria = (Categoria) o;
-        return Objects.equals(id, categoria.id);
+        Category category = (Category) o;
+        return Objects.equals(id, category.id);
     }
 
     @Override

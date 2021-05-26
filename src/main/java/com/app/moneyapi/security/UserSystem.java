@@ -1,21 +1,20 @@
 package com.app.moneyapi.security;
 
-import com.app.moneyapi.entity.Usuario;
+import com.app.moneyapi.entity.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-public class UserSystem extends User {
+public class UserSystem extends org.springframework.security.core.userdetails.User {
 
-    private Usuario usuario;
+    private User user;
 
-    public UserSystem(Usuario usuario, Collection<? extends GrantedAuthority> authorities) {
-        super(usuario.getEmail(), usuario.getSenha(), authorities);
-        this.usuario = usuario;
+    public UserSystem(User user, Collection<? extends GrantedAuthority> authorities) {
+        super(user.getEmail(), user.getPassword(), authorities);
+        this.user = user;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public User getUser() {
+        return user;
     }
 }

@@ -7,23 +7,23 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "pessoa")
-public class Pessoa {
+@Table(name = "people")
+public class People {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private String nome;
+    private String name;
 
     @Embedded
-    private Endereco endereco;
+    private Address address;
 
     @NotNull
-    private Boolean ativo;
+    private Boolean active;
 
-    public Pessoa() {
+    public People() {
     }
 
     public Long getId() {
@@ -34,42 +34,42 @@ public class Pessoa {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String name) {
-        this.nome = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Endereco getEndereco() {
-        return endereco;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public Boolean getAtivo() {
-        return ativo;
+    public Boolean getActive() {
+        return active;
     }
 
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     @JsonIgnore
     @Transient
-    public boolean isInativo() {
-        return !this.ativo;
+    public boolean isInactive() {
+        return !this.active;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pessoa pessoa = (Pessoa) o;
-        return Objects.equals(id, pessoa.id);
+        People people = (People) o;
+        return Objects.equals(id, people.id);
     }
 
     @Override

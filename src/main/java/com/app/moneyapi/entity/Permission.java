@@ -6,14 +6,14 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "permissao")
-public class Permissao {
+@Table(name = "permission")
+public class Permission {
 
     @Id
     private Long id;
-    private String descricao;
+    private String description;
 
-    public Permissao() {
+    public Permission() {
     }
 
     public Long getId() {
@@ -24,20 +24,20 @@ public class Permissao {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Permissao permissao = (Permissao) o;
-        return Objects.equals(id, permissao.id);
+        Permission permission = (Permission) o;
+        return Objects.equals(id, permission.id);
     }
 
     @Override
