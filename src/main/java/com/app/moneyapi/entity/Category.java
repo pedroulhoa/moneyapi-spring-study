@@ -1,5 +1,7 @@
 package com.app.moneyapi.entity;
 
+import com.app.moneyapi.dto.request.CategoryRequest;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +20,11 @@ public class Category {
     private String name;
 
     public Category() {
+    }
+
+    public Category(CategoryRequest categoryRequest) {
+        this.id = categoryRequest.getId();
+        this.name = categoryRequest.getName();
     }
 
     public Long getId() {
