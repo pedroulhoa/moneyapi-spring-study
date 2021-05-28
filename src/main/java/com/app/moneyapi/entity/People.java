@@ -1,5 +1,6 @@
 package com.app.moneyapi.entity;
 
+import com.app.moneyapi.dto.request.PeopleRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -24,6 +25,13 @@ public class People {
     private Boolean active;
 
     public People() {
+    }
+
+    public People(PeopleRequest peopleRequest) {
+        this.id = peopleRequest.getId();
+        this.name = peopleRequest.getName();
+        this.address = peopleRequest.getAddress();
+        this.active = peopleRequest.getActive();
     }
 
     public Long getId() {

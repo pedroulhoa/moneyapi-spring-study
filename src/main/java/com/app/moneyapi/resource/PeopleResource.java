@@ -1,5 +1,7 @@
 package com.app.moneyapi.resource;
 
+import com.app.moneyapi.dto.request.PeopleRequest;
+import com.app.moneyapi.dto.response.PeopleResponse;
 import com.app.moneyapi.entity.People;
 import com.app.moneyapi.event.ResourceCreateEvent;
 import com.app.moneyapi.repository.PeopleRepository;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/people")
@@ -30,23 +33,24 @@ public class PeopleResource {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_SEARCH_PEOPLE') and #oauth2.hasScope('read')")
-    public List<People> getAll() {
-        return peopleRepository.findAll();
+    public List<PeopleResponse> getAll() {
+        return peopleRepository.findAll().stream()
+                .map(people -> new PeopleResponse(people)).collect(Collectors.toList());
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_CREATE_PEOPLE') and #oauth2.hasScope('white')")
-    public ResponseEntity<People> create(@Valid @RequestBody People people, HttpServletResponse response) {
-        People peopleSave = peopleRepository.save(people);
+    public ResponseEntity<PeopleRequest> create(@Valid @RequestBody PeopleRequest peopleRequest, HttpServletResponse response) {
+        People peopleSave = peopleRepository.save(new People(peopleRequest));
         publisher.publishEvent(new ResourceCreateEvent(this, response, peopleSave.getId()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(peopleSave);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PeopleRequest(peopleSave));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_SEARCH_PEOPLE') and #oauth2.hasScope('read')")
     public ResponseEntity get(@PathVariable Long id) {
         return peopleRepository.findById(id)
-                .map(people -> ResponseEntity.ok().body(people))
+                .map(people -> ResponseEntity.ok().body(new PeopleResponse(people)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -59,9 +63,9 @@ public class PeopleResource {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_CREATE_PEOPLE') and #oauth2.hasScope('white')")
-    public ResponseEntity<People> update(@PathVariable Long id, @Valid @RequestBody People people) {
-        People peopleSave = peopleService.update(id, people);
-        return ResponseEntity.ok(peopleSave);
+    public ResponseEntity<PeopleRequest> update(@PathVariable Long id, @Valid @RequestBody PeopleRequest peopleRequest) {
+        People peopleSave = peopleService.update(id, new People(peopleRequest));
+        return ResponseEntity.ok(new PeopleRequest(peopleSave));
     }
 
     @PutMapping("/{id}/active")
