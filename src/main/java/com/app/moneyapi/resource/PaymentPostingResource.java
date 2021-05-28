@@ -1,6 +1,8 @@
 package com.app.moneyapi.resource;
 
 import com.app.moneyapi.dto.paymentPostingDTO;
+import com.app.moneyapi.dto.request.PaymentPostingRequest;
+import com.app.moneyapi.dto.response.PaymentPostingResponse;
 import com.app.moneyapi.entity.PaymentPosting;
 import com.app.moneyapi.repository.filter.PaymentPostingFilter;
 import com.app.moneyapi.event.ResourceCreateEvent;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/payments-posting")
@@ -34,8 +37,9 @@ public class PaymentPostingResource {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_SEARCH_PAYMENTPOSTING') and #oauth2.hasScope('read')")
-    public List<PaymentPosting> getAll() {
-        return paymentPostingRepository.findAll();
+    public List<PaymentPostingResponse> getAll() {
+        return paymentPostingRepository.findAll().stream()
+                .map(paymentPosting -> new PaymentPostingResponse(paymentPosting)).collect(Collectors.toList());
     }
 
     @GetMapping(params = "resume")
@@ -46,24 +50,25 @@ public class PaymentPostingResource {
 
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('ROLE_SEARCH_PAYMENTPOSTING') and #oauth2.hasScope('read')")
-    public Page<PaymentPosting> search(PaymentPostingFilter paymentPostingFilter, Pageable pageable) {
-        return paymentPostingRepository.searchByFilter(paymentPostingFilter, pageable);
+    public Page<PaymentPostingResponse> search(PaymentPostingFilter paymentPostingFilter, Pageable pageable) {
+        return paymentPostingRepository.searchByFilter(paymentPostingFilter, pageable)
+                .map(paymentPosting -> new PaymentPostingResponse(paymentPosting));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_SEARCH_PAYMENTPOSTING') and #oauth2.hasScope('read')")
-    public ResponseEntity<PaymentPosting> get(@PathVariable Long id) {
+    public ResponseEntity<PaymentPostingResponse> get(@PathVariable Long id) {
         return paymentPostingRepository.findById(id)
-                .map(l -> ResponseEntity.ok().body(l))
+                .map(paymentPosting -> ResponseEntity.ok().body(new PaymentPostingResponse(paymentPosting)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_CREATE_PAYMENTPOSTING') and #oauth2.hasScope('white')")
-    public ResponseEntity<PaymentPosting> create(@Valid @RequestBody PaymentPosting paymentPosting, HttpServletResponse response) {
-        PaymentPosting paymentPostingSave = paymentPostingService.save(paymentPosting);
+    public ResponseEntity<PaymentPostingRequest> create(@Valid @RequestBody PaymentPostingRequest paymentPostingRequest, HttpServletResponse response) {
+        PaymentPosting paymentPostingSave = paymentPostingService.save(new PaymentPosting(paymentPostingRequest));
         publisher.publishEvent(new ResourceCreateEvent(this, response, paymentPostingSave.getId()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentPostingSave);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PaymentPostingRequest(paymentPostingSave));
     }
 
     @DeleteMapping("/{id}")

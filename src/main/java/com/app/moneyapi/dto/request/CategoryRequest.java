@@ -18,9 +18,9 @@ public class CategoryRequest {
         this.name = name;
     }
 
-    public CategoryRequest(Category categorySave) {
-        this.id = categorySave.getId();
-        this.name = categorySave.getName();
+    public CategoryRequest(Category category) {
+        this.id = category.getId();
+        this.name = category.getName();
     }
 
     public Long getId() {

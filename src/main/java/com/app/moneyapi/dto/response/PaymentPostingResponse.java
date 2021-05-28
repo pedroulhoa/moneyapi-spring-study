@@ -1,30 +1,24 @@
-package com.app.moneyapi.entity;
+package com.app.moneyapi.dto.response;
 
-import com.app.moneyapi.dto.request.PaymentPostingRequest;
+import com.app.moneyapi.entity.Category;
+import com.app.moneyapi.entity.PaymentPosting;
+import com.app.moneyapi.entity.People;
 import com.app.moneyapi.entity.enums.paymentPostingType;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
-@Entity
-@Table(name = "payment_posting")
-public class PaymentPosting {
+public class PaymentPostingResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     private String description;
 
     @NotNull
-    @Column(name = "expiration_date")
     private LocalDate expirationDate;
 
-    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
     @NotNull
@@ -33,32 +27,36 @@ public class PaymentPosting {
     private String note;
 
     @NotNull
-    @Enumerated(EnumType.STRING)
     private paymentPostingType type;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "category_code")
     private Category category;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "people_code")
     private People people;
 
-    public PaymentPosting() {
+    public PaymentPostingResponse(Long id, String description, LocalDate expirationDate, LocalDate paymentDate, BigDecimal amount, String note, paymentPostingType type, Category category, People people) {
+        this.id = id;
+        this.description = description;
+        this.expirationDate = expirationDate;
+        this.paymentDate = paymentDate;
+        this.amount = amount;
+        this.note = note;
+        this.type = type;
+        this.category = category;
+        this.people = people;
     }
 
-    public PaymentPosting(PaymentPostingRequest paymentPostingRequest) {
-        this.id = paymentPostingRequest.getId();
-        this.description = paymentPostingRequest.getDescription();
-        this.expirationDate = paymentPostingRequest.getExpirationDate();
-        this.paymentDate = paymentPostingRequest.getPaymentDate();
-        this.amount = paymentPostingRequest.getAmount();
-        this.note = paymentPostingRequest.getNote();
-        this.type = paymentPostingRequest.getType();
-        this.category = paymentPostingRequest.getCategory();
-        this.people = paymentPostingRequest.getPeople();
+    public PaymentPostingResponse(PaymentPosting paymentPosting) {
+        this.id = paymentPosting.getId();
+        this.description = paymentPosting.getDescription();
+        this.expirationDate = paymentPosting.getExpirationDate();
+        this.paymentDate = paymentPosting.getPaymentDate();
+        this.amount = paymentPosting.getAmount();
+        this.note = paymentPosting.getNote();
+        this.type = paymentPosting.getType();
+        this.category = paymentPosting.getCategory();
+        this.people = paymentPosting.getPeople();
     }
 
     public Long getId() {
@@ -131,18 +129,5 @@ public class PaymentPosting {
 
     public void setPeople(People people) {
         this.people = people;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PaymentPosting that = (PaymentPosting) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
